@@ -1,14 +1,6 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
-// exports.verifyPrincipalCredentials = async (email, password) => {
-//     const [rows] = await db.execute('SELECT * FROM principals WHERE email = ?', [email]);
-//     console.log("Database Row Found:", rows[0]);
-//     if (rows.length === 0) return null;
-    
-//     const isMatch = await bcrypt.compare(password, rows[0].password_hash);
-//     return isMatch ? rows[0] : null;
-// };
 
 exports.verifyPrincipalCredentials = async (email, password) => {
     const [rows] = await db.execute('SELECT * FROM principals WHERE email = ?', [email]);

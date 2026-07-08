@@ -1,25 +1,3 @@
-// require('dotenv').config();
-// const express = require('express');
-// const cors = require('cors');
-// const errorHandler = require('./middlewares/errorHandlerMiddleware');
-// const apiRoutes = require('./routes/combinedRoutes'); // Automatically targets index.js
-
-// const app = express();
-
-// // Global Middleware Configs
-// app.use(cors());
-// app.use(express.json());
-
-// // Mount the unified routing system under the '/api' prefix
-// app.use('/api', apiRoutes);
-
-// // Global Error Handler Interceptor Layer
-// app.use(errorHandler);
-
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//     console.log(`Backend Application server executing securely on port ${PORT}`);
-// });
 
 require('dotenv').config();
 const express = require('express');

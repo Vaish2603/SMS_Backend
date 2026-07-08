@@ -31,3 +31,17 @@ Import and run your MySQL schema scripts locally.
 6. Start the server:
 - >> node server.js
 The API will run on http://localhost:5000
+
+
+## 🚀 How to Push Them to GitHub Separately
+
+Since they are independent, you will open **two separate terminal windows** (one in your frontend project folder, one in your backend folder) and execute the Git initialization steps inside each one:
+
+```bash
+# Run these commands inside the backend folder, and then repeat inside the frontend folder
+git init
+git add .
+git commit -m "Initial commit: decoupled architecture infrastructure setup"
+git remote add origin https://github.com/your-username/your-specific-repo-name.git
+git branch -M main
+git push -u origin main

@@ -1,29 +1,4 @@
-// const noticeService = require('../services/noticeServices');
 
-// exports.getAll = async (req, res, next) => {
-//     try {
-//         const list = await noticeService.fetchNotices();
-//         res.json(list);
-//     } catch (err) { next(err); }
-// };
-
-// exports.create = async (req, res, next) => {
-//     try {
-//         const { title, description } = req.body;
-//         if (!title || !description) {
-//             return res.status(400).json({ error: "Title and Description are strictly required." });
-//         }
-//         const result = await noticeService.addNotice({ title, description });
-//         res.status(201).json({ message: "Notice published successfully!", id: result.insertId });
-//     } catch (err) { next(err); }
-// };
-
-// exports.delete = async (req, res, next) => {
-//     try {
-//         await noticeService.removeNotice(req.params.id);
-//         res.json({ message: "Notice deleted cleanly from the board." });
-//     } catch (err) { next(err); }
-// };
 
 const noticeService = require('../services/noticeServices');
 
