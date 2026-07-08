@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Local Environment Secrets
+.env
+.env.local
+
+# Media Uploads
+uploads/*
+# Keep the folder structure on GitHub but ignore user-uploaded files
+!uploads/.gitkeep
+
+# System Logs
+npm-debug.log*
+.DS_Store
