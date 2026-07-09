@@ -1,0 +1,167 @@
+// routes/attendanceRoutes.js
+const express = require('express');
+const router = express.Router();
+const attendanceController = require('../controllers/attendanceController');
+
+router.get('/', attendanceController.getByDate);
+router.post('/bulk', attendanceController.saveBulk); // <--- Make sure this points to your new controller method
+
+module.exports = router;
+
+
+
+
+
+// routes/authRoutes.js
+const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/authController');
+const authMiddleware = require('../middlewares/authMiddleware');
+
+router.post('/login', authController.login);
+router.get('/profile', authMiddleware, authController.getProfile);
+router.put('/profile', authMiddleware, authController.updateProfile);
+
+module.exports = router;
+
+
+
+
+
+// routes/dashboardRoutes.js
+const express = require('express');
+const router = express.Router();
+const dashboardController = require('../controllers/dashboardController');
+const authMiddleware = require('../middlewares/authMiddleware');
+
+router.get('/stats', authMiddleware, dashboardController.getMetrics);
+
+module.exports = router;
+
+
+
+
+
+// routes/eventRoutes.js
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const eventController = require('../controllers/eventController');
+
+// 1. Setup Storage Location (Ensure an 'uploads' directory exists in backend root)
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+// 2. Filter formats for Images, PDFs, and Videos
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['.pdf', '.png', '.jpg', '.jpeg', '.mp4', '.mkv', '.mov'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowedTypes.includes(ext)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Format not supported. Upload only PDFs, Images, or MP4/MKV/MOV Videos.'), false);
+    }
+};
+
+const upload = multer({ 
+    storage, 
+    fileFilter,
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB Max limit for videos
+});
+
+// 3. Form Interceptor Wrapper Middleware
+const handleUpload = (req, res, next) => {
+    upload.single('file')(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        next();
+    });
+};
+
+// 4. Routes mapping Full CRUD
+router.get('/', eventController.getAll);
+router.post('/', handleUpload, eventController.create);
+router.put('/:id', handleUpload, eventController.update);
+router.delete('/:id', eventController.delete);
+
+module.exports = router;
+
+
+// routes/leaveRoutes.js
+
+const express = require('express');
+const router = express.Router();
+const leaveController = require('../controllers/leaveController');
+
+router.get('/', leaveController.getAll);
+router.post('/', leaveController.create); // <--- ENSURE THIS ROUTE EXISTs
+router.put('/:id/status', leaveController.updateStatus);
+
+module.exports = router;
+
+
+
+// routes/noticeRoutes.js
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const noticeController = require('../controllers/noticeController');
+
+// Configure upload folder and filename preservation naming conventions
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); 
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    const allowedExtensions = ['.pdf', '.png', '.jpg', '.jpeg'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    
+    if (allowedExtensions.includes(ext)) {
+        cb(null, true);
+    } else {
+        // This message will bubble directly back into your React front-end alert box!
+        cb(new Error(`Extension "${ext}" is not supported. Please upload a PDF or an Image.`), false);
+    }
+};
+const upload = multer({ storage, fileFilter });
+
+router.get('/', noticeController.getAll);
+router.post('/', upload.single('file'), noticeController.create); // 'file' matches front-end input key names
+router.delete('/:id', noticeController.delete);
+router.put('/:id', upload.single('file'), noticeController.update);
+
+module.exports = router;
+
+
+
+// routes/studentRoutes.js
+const express = require('express');
+const router = express.Router();
+const studentController = require('../controllers/studentController');
+const authMiddleware = require('../middlewares/authMiddleware');
+
+router.use(authMiddleware); // Protect all CRUD routes
+
+router.get('/', studentController.getAll);
+router.post('/', studentController.create);
+router.put('/:id', studentController.update);
+router.delete('/:id', studentController.delete);
+
+module.exports = router;
+
+
+// 
